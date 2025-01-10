@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.3.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>br.dev.diego</groupId>
     <artifactId>anime-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>anime-service</name>
-    <description>anime-service</description>
+    <name>Anime Service</name>
+    <description>Projeto curso DevDojo Spring Boot Direto das Fronteiras</description>
     <url/>
     <licenses>
         <license/>
