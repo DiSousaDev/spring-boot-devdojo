@@ -1,4 +1,4 @@
-package br.dev.diego.animeservice.domain;
+package br.dev.diego.animeservice.domain.request;
 
 public class AnimeRequest {
 

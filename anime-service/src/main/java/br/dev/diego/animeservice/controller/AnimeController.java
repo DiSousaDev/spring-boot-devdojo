@@ -1,7 +1,7 @@
 package br.dev.diego.animeservice.controller;
 
 import br.dev.diego.animeservice.domain.Anime;
-import br.dev.diego.animeservice.domain.AnimeRequest;
+import br.dev.diego.animeservice.domain.request.AnimeRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
