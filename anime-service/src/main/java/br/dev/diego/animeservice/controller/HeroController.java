@@ -3,6 +3,7 @@ package br.dev.diego.animeservice.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,14 @@ public class HeroController {
     public List<String> obterAnimesFiltrado(@RequestParam(defaultValue = "") List<String> nomes) {
         log.info(Thread.currentThread().getName());
         return Stream.of("Guts", "Zoro", "Kakashi", "Goku").filter(nomes::contains).toList();
+    }
+
+    @GetMapping("{nome}")
+    public String obterAnimePorNome(@PathVariable String nome) {
+        log.info(Thread.currentThread().getName());
+        return Stream.of("Guts", "Zoro", "Kakashi", "Goku")
+                .filter(hero -> hero.equalsIgnoreCase(nome))
+                .findFirst().orElse("Hero not found");
     }
 
 }
