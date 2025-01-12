@@ -5,26 +5,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
 public class AnimeRepository {
 
-    private static List<Anime> animes = new ArrayList<>();
+    private final AnimeData animeData;
 
-    static {
-        animes.addAll(Arrays.asList(
-                new Anime(1L, "Naruto"),
-                new Anime(2L, "One Piece"),
-                new Anime(3L, "Attack on Titan"),
-                new Anime(4L, "My Hero Academia"),
-                new Anime(5L, "Demon Slayer")));
+    public AnimeRepository(AnimeData animeData) {
+        this.animeData = animeData;
     }
 
     public List<Anime> findAll() {
-        return animes;
+        return animeData.getAnimes();
     }
 
     public Anime save(Anime anime) {
