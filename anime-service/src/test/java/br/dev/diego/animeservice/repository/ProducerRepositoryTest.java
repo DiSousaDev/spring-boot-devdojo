@@ -26,7 +26,7 @@ class ProducerRepositoryTest {
     private ProducerRepository repository;
 
     @Mock
-    private ProducterData producerData;
+    private ProducerData producerData;
 
     private final List<Producer> producerList = new ArrayList<>();
 

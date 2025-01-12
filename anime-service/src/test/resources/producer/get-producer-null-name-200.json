@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Toei Animation Test",
+    "createdAt": "2025-01-10T17:48:37.550866"
+  },
+  {
+    "id": 2,
+    "name": "Madhouse",
+    "createdAt": "2025-01-10T17:48:37.550866"
+  },
+  {
+    "id": 3,
+    "name": "Bones",
+    "createdAt": "2025-01-10T17:48:37.550866"
+  },
+  {
+    "id": 4,
+    "name": "Sunrise",
+    "createdAt": "2025-01-10T17:48:37.550866"
+  }
+]

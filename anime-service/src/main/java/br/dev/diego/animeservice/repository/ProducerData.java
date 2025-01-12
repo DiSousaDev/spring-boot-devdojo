@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class ProducterData {
+public class ProducerData {
 
     private List<Producer> producers = new ArrayList<>();
 

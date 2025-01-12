@@ -10,14 +10,14 @@ import java.util.List;
 @Repository
 public class ProducerRepository {
 
-    private final ProducterData producterData;
+    private final ProducerData producerData;
 
-    public ProducerRepository(ProducterData producterData) {
-        this.producterData = producterData;
+    public ProducerRepository(ProducerData producerData) {
+        this.producerData = producerData;
     }
 
     public List<Producer> findAll() {
-        return producterData.getProducers();
+        return producerData.getProducers();
     }
 
     public Producer save(Producer producer) {
