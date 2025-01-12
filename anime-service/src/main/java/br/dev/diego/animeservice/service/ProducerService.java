@@ -4,6 +4,7 @@ import br.dev.diego.animeservice.domain.Producer;
 import br.dev.diego.animeservice.domain.mappers.ProducerMapper;
 import br.dev.diego.animeservice.domain.request.ProducerRequest;
 import br.dev.diego.animeservice.domain.request.ProducerResponse;
+import br.dev.diego.animeservice.domain.request.ProducerUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,12 @@ public class ProducerService {
         return MAPPER.toResponse(producer);
     }
 
+    public ProducerResponse atualizar(Long id, ProducerUpdateRequest request) {
+        Producer producer = getProducerEntity(id);
+        MAPPER.updateProducerFromRequest(request, producer);
+        return MAPPER.toResponse(producer);
+    }
+
     public ResponseEntity<Void> deletar(Long id) {
         getProducerEntity(id);
         Producer.getProducers().removeIf(a -> a.getId().equals(id));
@@ -47,4 +54,5 @@ public class ProducerService {
                 .findFirst()
                 .orElseThrow();
     }
+
 }

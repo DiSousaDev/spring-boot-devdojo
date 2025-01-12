@@ -3,8 +3,10 @@ package br.dev.diego.animeservice.domain.mappers;
 import br.dev.diego.animeservice.domain.Anime;
 import br.dev.diego.animeservice.domain.request.AnimeRequest;
 import br.dev.diego.animeservice.domain.request.AnimeResponse;
+import br.dev.diego.animeservice.domain.request.AnimeUpdateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -21,5 +23,6 @@ public interface AnimeMapper {
 
     List<AnimeResponse> toResponseList(List<Anime> animes);
 
+    void updateAnimeFromRequest(AnimeUpdateRequest request, @MappingTarget Anime anime);
 
 }

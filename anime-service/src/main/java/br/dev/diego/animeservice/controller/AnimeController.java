@@ -2,6 +2,7 @@ package br.dev.diego.animeservice.controller;
 
 import br.dev.diego.animeservice.domain.request.AnimeRequest;
 import br.dev.diego.animeservice.domain.request.AnimeResponse;
+import br.dev.diego.animeservice.domain.request.AnimeUpdateRequest;
 import br.dev.diego.animeservice.service.AnimeService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +36,7 @@ public class AnimeController {
 
     @GetMapping("{id}")
     public ResponseEntity<AnimeResponse> obterAnimePorId(@PathVariable Long id) {
-        return animeService.buscarAnimePorId(id);
+        return ResponseEntity.ok(animeService.buscarAnimePorId(id));
     }
 
     @PostMapping
@@ -48,9 +50,16 @@ public class AnimeController {
         return ResponseEntity.created(location).headers(httpResponseHeaders).body(response);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<AnimeResponse> atualizarAnime(@PathVariable Long id, @RequestBody AnimeUpdateRequest request) {
+        AnimeResponse animeResponse = animeService.atualizar(id, request);
+        return ResponseEntity.ok(animeResponse);
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletarAnime(@PathVariable Long id) {
-        return animeService.deletar(id);
+        animeService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -4,7 +4,7 @@ import br.dev.diego.animeservice.domain.Anime;
 import br.dev.diego.animeservice.domain.mappers.AnimeMapper;
 import br.dev.diego.animeservice.domain.request.AnimeRequest;
 import br.dev.diego.animeservice.domain.request.AnimeResponse;
-import org.springframework.http.ResponseEntity;
+import br.dev.diego.animeservice.domain.request.AnimeUpdateRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,15 +30,21 @@ public class AnimeService {
         return MAPPER.toResponse(entity);
     }
 
-    public ResponseEntity<AnimeResponse> buscarAnimePorId(Long id) {
+    public AnimeResponse buscarAnimePorId(Long id) {
         Anime anime = getAnimeEntity(id);
-        return ResponseEntity.ok(MAPPER.toResponse(anime));
+        return MAPPER.toResponse(anime);
     }
 
-    public ResponseEntity<Void> deletar(Long id) {
+    public AnimeResponse atualizar(Long id, AnimeUpdateRequest request) {
+        Anime anime = getAnimeEntity(id);
+        MAPPER.updateAnimeFromRequest(request, anime);
+        return MAPPER.toResponse(anime);
+    }
+
+
+    public void deletar(Long id) {
         getAnimeEntity(id);
         Anime.getAnimes().removeIf(a -> a.getId().equals(id));
-        return ResponseEntity.noContent().build();
     }
 
     private static Anime getAnimeEntity(Long id) {
