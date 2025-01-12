@@ -1,7 +1,10 @@
 package br.dev.diego.animeservice.controller;
 
-import br.dev.diego.animeservice.domain.Anime;
 import br.dev.diego.animeservice.domain.request.AnimeRequest;
+import br.dev.diego.animeservice.domain.request.AnimeResponse;
+import br.dev.diego.animeservice.service.AnimeService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,35 +13,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Random;
 
 @RestController
 @RequestMapping("v1/animes")
 public class AnimeController {
 
+    private final AnimeService animeService;
+
+    public AnimeController(AnimeService animeService) {
+        this.animeService = animeService;
+    }
+
     @GetMapping
-    public List<Anime> obterAnimes(@RequestParam(required = false) String nome) {
-        if (nome == null) return Anime.getAnimes();
-        return Anime.getAnimes().stream()
-                .filter(anime -> anime.getName().equalsIgnoreCase(nome))
-                .toList();
+    public ResponseEntity<List<AnimeResponse>> obterAnimes(@RequestParam(required = false) String nome) {
+       return ResponseEntity.ok(animeService.buscarAnimes(nome));
     }
 
     @GetMapping("{id}")
-    public Anime obterAnimePorId(@PathVariable Long id) {
-        return Anime.getAnimes().stream()
-                .filter(anime -> anime.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
+    public ResponseEntity<AnimeResponse> obterAnimePorId(@PathVariable Long id) {
+        return animeService.buscarAnimePorId(id);
     }
 
     @PostMapping
-    public Anime salvarAnime(@RequestBody AnimeRequest anime) {
-        Long id = new Random().nextLong(999);
-        Anime animeSaved = new Anime(id, anime.getName());
-        Anime.getAnimes().add(animeSaved);
-        return animeSaved;
+    public ResponseEntity<AnimeResponse> salvarAnime(@RequestBody AnimeRequest anime) {
+        AnimeResponse response = animeService.save(anime);
+        URI location = URI.create("/v1/animes/" + response.id());
+
+        var httpResponseHeaders = new HttpHeaders();
+        httpResponseHeaders.add("Authorization", "My Key Example");
+
+        return ResponseEntity.created(location).headers(httpResponseHeaders).body(response);
     }
 
 }
