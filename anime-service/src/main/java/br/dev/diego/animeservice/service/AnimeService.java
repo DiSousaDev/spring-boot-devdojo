@@ -13,11 +13,11 @@ import java.util.List;
 @Service
 public class AnimeService {
 
-    private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
-
+    private final AnimeMapper mapper;
     private final AnimeRepository repository;
 
-    public AnimeService(AnimeRepository repository) {
+    public AnimeService(AnimeMapper mapper, AnimeRepository repository) {
+        this.mapper = mapper;
         this.repository = repository;
     }
 
@@ -26,23 +26,23 @@ public class AnimeService {
         if (nome != null) {
             animes = repository.findByName(nome);
         }
-        return MAPPER.toResponseList(animes);
+        return mapper.toResponseList(animes);
     }
 
     public AnimeResponse save(AnimeRequest request) {
-        Anime entity = MAPPER.toEntity(request);
-        return MAPPER.toResponse(repository.save(entity));
+        Anime entity = mapper.toEntity(request);
+        return mapper.toResponse(repository.save(entity));
     }
 
     public AnimeResponse buscarPorId(Long id) {
         Anime anime = repository.findById(id);
-        return MAPPER.toResponse(anime);
+        return mapper.toResponse(anime);
     }
 
     public AnimeResponse atualizar(Long id, AnimeUpdateRequest request) {
         Anime anime = repository.findById(id);
-        MAPPER.updateAnimeFromRequest(request, anime);
-        return MAPPER.toResponse(anime);
+        mapper.updateAnimeFromRequest(request, anime);
+        return mapper.toResponse(anime);
     }
 
     public void deletar(Long id) {

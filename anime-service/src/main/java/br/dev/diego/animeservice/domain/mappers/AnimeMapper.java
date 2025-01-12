@@ -7,19 +7,18 @@ import br.dev.diego.animeservice.domain.request.AnimeUpdateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+
+@Mapper(componentModel = SPRING)
 public interface AnimeMapper {
-
-    AnimeMapper INSTANCE = Mappers.getMapper(AnimeMapper.class);
-
-    AnimeResponse toResponse(Anime anime);
 
     @Mapping(target = "id", expression = "java(new java.util.Random().nextLong(999))")
     Anime toEntity(AnimeRequest animeRequest);
+
+    AnimeResponse toResponse(Anime anime);
 
     List<AnimeResponse> toResponseList(List<Anime> animes);
 

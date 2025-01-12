@@ -13,11 +13,11 @@ import java.util.List;
 @Service
 public class ProducerService {
 
-    private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
-
+    private final ProducerMapper mapper;
     private final ProducerRepository repository;
 
-    public ProducerService(ProducerRepository repository) {
+    public ProducerService(ProducerMapper mapper, ProducerRepository repository) {
+        this.mapper = mapper;
         this.repository = repository;
     }
 
@@ -26,23 +26,23 @@ public class ProducerService {
         if (nome != null) {
             producers = repository.findByName(nome);
         }
-        return MAPPER.toResponseList(producers);
+        return mapper.toResponseList(producers);
     }
 
     public ProducerResponse save(ProducerRequest request) {
-        Producer entity = MAPPER.toEntity(request);
-        return MAPPER.toResponse(repository.save(entity));
+        Producer entity = mapper.toEntity(request);
+        return mapper.toResponse(repository.save(entity));
     }
 
     public ProducerResponse buscarPorId(Long id) {
         Producer producer = repository.findById(id);
-        return MAPPER.toResponse(producer);
+        return mapper.toResponse(producer);
     }
 
     public ProducerResponse atualizar(Long id, ProducerUpdateRequest request) {
         Producer producer = repository.findById(id);
-        MAPPER.updateProducerFromRequest(request, producer);
-        return MAPPER.toResponse(producer);
+        mapper.updateProducerFromRequest(request, producer);
+        return mapper.toResponse(producer);
     }
 
     public void deletar(Long id) {
