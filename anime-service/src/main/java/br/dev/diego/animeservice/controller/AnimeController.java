@@ -1,5 +1,7 @@
 package br.dev.diego.animeservice.controller;
 
+import br.dev.diego.animeservice.domain.Anime;
+import br.dev.diego.animeservice.domain.mappers.AnimeMapper;
 import br.dev.diego.animeservice.domain.request.AnimeRequest;
 import br.dev.diego.animeservice.domain.request.AnimeResponse;
 import br.dev.diego.animeservice.domain.request.AnimeUpdateRequest;
@@ -24,24 +26,27 @@ import java.util.List;
 public class AnimeController {
 
     private final AnimeService animeService;
+    private final AnimeMapper mapper;
 
-    public AnimeController(AnimeService animeService) {
+    public AnimeController(AnimeService animeService, AnimeMapper mapper) {
         this.animeService = animeService;
+        this.mapper = mapper;
     }
 
     @GetMapping
     public ResponseEntity<List<AnimeResponse>> obterAnimes(@RequestParam(required = false) String nome) {
-       return ResponseEntity.ok(animeService.buscar(nome));
+       return ResponseEntity.ok(mapper.toResponseList(animeService.buscar(nome)));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<AnimeResponse> obterAnimePorId(@PathVariable Long id) {
-        return ResponseEntity.ok(animeService.buscarPorId(id));
+        return ResponseEntity.ok(mapper.toResponse(animeService.buscarPorId(id)));
     }
 
     @PostMapping
-    public ResponseEntity<AnimeResponse> salvarAnime(@RequestBody AnimeRequest anime) {
-        AnimeResponse response = animeService.save(anime);
+    public ResponseEntity<AnimeResponse> salvarAnime(@RequestBody AnimeRequest request) {
+        Anime entity = mapper.toEntity(request);
+        AnimeResponse response = mapper.toResponse(animeService.save(entity));
         URI location = URI.create("/v1/animes/" + response.id());
 
         var httpResponseHeaders = new HttpHeaders();
@@ -52,8 +57,9 @@ public class AnimeController {
 
     @PutMapping("{id}")
     public ResponseEntity<AnimeResponse> atualizarAnime(@PathVariable Long id, @RequestBody AnimeUpdateRequest request) {
-        AnimeResponse animeResponse = animeService.atualizar(id, request);
-        return ResponseEntity.ok(animeResponse);
+        Anime anime = animeService.atualizar(id);
+        mapper.updateAnimeFromRequest(request, anime);
+        return ResponseEntity.ok(mapper.toResponse(anime));
     }
 
     @DeleteMapping("{id}")

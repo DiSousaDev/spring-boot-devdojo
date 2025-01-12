@@ -1,5 +1,7 @@
 package br.dev.diego.animeservice.controller;
 
+import br.dev.diego.animeservice.domain.Producer;
+import br.dev.diego.animeservice.domain.mappers.ProducerMapper;
 import br.dev.diego.animeservice.domain.request.ProducerRequest;
 import br.dev.diego.animeservice.domain.request.ProducerResponse;
 import br.dev.diego.animeservice.domain.request.ProducerUpdateRequest;
@@ -24,24 +26,27 @@ import java.util.List;
 public class ProducerController {
 
     private final ProducerService producerService;
+    private final ProducerMapper mapper;
 
-    public ProducerController(ProducerService producerService) {
+    public ProducerController(ProducerService producerService, ProducerMapper mapper) {
         this.producerService = producerService;
+        this.mapper = mapper;
     }
 
     @GetMapping
     public ResponseEntity<List<ProducerResponse>> obterProducers(@RequestParam(required = false) String nome) {
-        return ResponseEntity.ok(producerService.buscar(nome));
+        return ResponseEntity.ok(mapper.toResponseList(producerService.buscar(nome)));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<ProducerResponse> obterProducerPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(producerService.buscarPorId(id));
+        return ResponseEntity.ok(mapper.toResponse(producerService.buscarPorId(id)));
     }
 
     @PostMapping
-    public ResponseEntity<ProducerResponse> salvarProducer(@RequestBody ProducerRequest producer) {
-        ProducerResponse response = producerService.save(producer);
+    public ResponseEntity<ProducerResponse> salvarProducer(@RequestBody ProducerRequest request) {
+        Producer entity = mapper.toEntity(request);
+        ProducerResponse response = mapper.toResponse(producerService.save(entity));
         URI location = URI.create("/v1/producers/" + response.id());
 
         var httpResponseHeaders = new HttpHeaders();
@@ -52,8 +57,9 @@ public class ProducerController {
 
     @PutMapping("{id}")
     public ResponseEntity<ProducerResponse> atualizar(@PathVariable Long id, @RequestBody ProducerUpdateRequest request) {
-        ProducerResponse producerResponse = producerService.atualizar(id, request);
-        return ResponseEntity.ok(producerResponse);
+        Producer producer = producerService.atualizar(id);
+        mapper.updateProducerFromRequest(request, producer);
+        return ResponseEntity.ok(mapper.toResponse(producer));
     }
 
     @DeleteMapping("{id}")
