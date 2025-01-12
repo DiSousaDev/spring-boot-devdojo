@@ -1,5 +1,7 @@
 package br.dev.diego.animeservice.domain;
 
+import java.util.Objects;
+
 public class Anime {
 
     private Long id;
@@ -29,4 +31,14 @@ public class Anime {
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Anime anime)) return false;
+        return Objects.equals(id, anime.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

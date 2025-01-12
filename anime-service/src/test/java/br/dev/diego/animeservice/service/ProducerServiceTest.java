@@ -1,5 +1,6 @@
 package br.dev.diego.animeservice.service;
 
+import br.dev.diego.animeservice.commons.ProducertUtils;
 import br.dev.diego.animeservice.domain.Producer;
 import br.dev.diego.animeservice.repository.ProducerRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,16 +47,8 @@ class ProducerServiceTest {
 
     @BeforeEach
     void setUp() {
-
-        producer1 = new Producer(1L, "Toei Animation", LocalDateTime.now().minusDays(2));
-
-        producerList.addAll(List.of(
-                producer1,
-                new Producer(2L, "Madhouse", LocalDateTime.now().minusDays(3)),
-                new Producer(3L, "Bones", LocalDateTime.now().minusDays(4)),
-                new Producer(4L, "Sunrise", LocalDateTime.now().minusDays(5)),
-                new Producer(5L, "Studio Ghibli", LocalDateTime.now().minusDays(6))
-        ));
+        producer1 = ProducertUtils.createProducer();
+        producerList.addAll(ProducertUtils.createProducerList());
     }
 
     @Test
@@ -65,7 +58,7 @@ class ProducerServiceTest {
         when(repository.findAll()).thenReturn(producerList);
         List<Producer> producers = service.buscar(null);
         assertFalse(producers.isEmpty());
-        assertEquals(5, producers.size());
+        assertEquals(4, producers.size());
         assertThat(producers).hasSameElementsAs(producerList);
     }
 

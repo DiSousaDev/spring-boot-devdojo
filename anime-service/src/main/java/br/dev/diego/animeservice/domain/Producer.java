@@ -1,6 +1,7 @@
 package br.dev.diego.animeservice.domain;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Producer {
 
@@ -41,4 +42,14 @@ public class Producer {
         this.createdAt = createdAt;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Producer producer)) return false;
+        return Objects.equals(id, producer.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

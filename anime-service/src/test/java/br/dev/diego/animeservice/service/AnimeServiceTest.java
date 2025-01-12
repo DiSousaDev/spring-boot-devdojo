@@ -1,5 +1,6 @@
 package br.dev.diego.animeservice.service;
 
+import br.dev.diego.animeservice.commons.AnimeUtils;
 import br.dev.diego.animeservice.domain.Anime;
 import br.dev.diego.animeservice.repository.AnimeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,11 +46,8 @@ class AnimeServiceTest {
 
     @BeforeEach
     void setUp() {
-        anime1 = new Anime(1L, "Naruto Test");
-        Anime anime2 = new Anime(2L, "One Piece Test");
-        Anime anime3 = new Anime(3L, "Attack on Titan Test");
-        Anime anime4 = new Anime(4L, "My Hero Academia Test");
-        animeList.addAll(List.of(anime1, anime2, anime3, anime4));
+        anime1 = AnimeUtils.createAnime();
+        animeList.addAll(AnimeUtils.createAnimeList());
     }
 
     @Test
