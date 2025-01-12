@@ -5,6 +5,7 @@ import br.dev.diego.animeservice.domain.mappers.AnimeMapper;
 import br.dev.diego.animeservice.domain.request.AnimeRequest;
 import br.dev.diego.animeservice.domain.request.AnimeResponse;
 import br.dev.diego.animeservice.domain.request.AnimeUpdateRequest;
+import br.dev.diego.animeservice.repository.AnimeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +15,16 @@ public class AnimeService {
 
     private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
 
+    private final AnimeRepository repository;
+
+    public AnimeService(AnimeRepository repository) {
+        this.repository = repository;
+    }
+
     public List<AnimeResponse> buscarAnimes(String nome) {
-        List<Anime> animes = Anime.getAnimes();
+        List<Anime> animes = repository.getAnimes();
         if (nome != null) {
-            animes = Anime.getAnimes().stream()
+            animes = repository.getAnimes().stream()
                     .filter(anime -> anime.getName().contains(nome))
                     .toList();
         }
@@ -26,7 +33,7 @@ public class AnimeService {
 
     public AnimeResponse save(AnimeRequest request) {
         Anime entity = MAPPER.toEntity(request);
-        Anime.getAnimes().add(entity);
+        repository.getAnimes().add(entity);
         return MAPPER.toResponse(entity);
     }
 
@@ -44,11 +51,11 @@ public class AnimeService {
 
     public void deletar(Long id) {
         getAnimeEntity(id);
-        Anime.getAnimes().removeIf(a -> a.getId().equals(id));
+        repository.getAnimes().removeIf(a -> a.getId().equals(id));
     }
 
-    private static Anime getAnimeEntity(Long id) {
-        return Anime.getAnimes().stream()
+    private Anime getAnimeEntity(Long id) {
+        return repository.getAnimes().stream()
                 .filter(a -> a.getId().equals(id))
                 .findFirst()
                 .orElseThrow();

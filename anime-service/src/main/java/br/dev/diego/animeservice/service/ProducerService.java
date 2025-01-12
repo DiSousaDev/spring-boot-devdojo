@@ -5,6 +5,7 @@ import br.dev.diego.animeservice.domain.mappers.ProducerMapper;
 import br.dev.diego.animeservice.domain.request.ProducerRequest;
 import br.dev.diego.animeservice.domain.request.ProducerResponse;
 import br.dev.diego.animeservice.domain.request.ProducerUpdateRequest;
+import br.dev.diego.animeservice.repository.ProducerRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,16 @@ public class ProducerService {
 
     private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
 
+    private final ProducerRepository repository;
+
+    public ProducerService(ProducerRepository repository) {
+        this.repository = repository;
+    }
+
     public List<ProducerResponse> buscarProducers(String nome) {
-        List<Producer> producers = Producer.getProducers();
+        List<Producer> producers = repository.getProducers();
         if (nome != null) {
-            producers = Producer.getProducers().stream()
+            producers = repository.getProducers().stream()
                     .filter(producer -> producer.getName().contains(nome))
                     .toList();
         }
@@ -27,7 +34,7 @@ public class ProducerService {
 
     public ProducerResponse save(ProducerRequest request) {
         Producer entity = MAPPER.toEntity(request);
-        Producer.getProducers().add(entity);
+        repository.getProducers().add(entity);
         return MAPPER.toResponse(entity);
     }
 
@@ -44,12 +51,12 @@ public class ProducerService {
 
     public ResponseEntity<Void> deletar(Long id) {
         getProducerEntity(id);
-        Producer.getProducers().removeIf(a -> a.getId().equals(id));
+        repository.getProducers().removeIf(a -> a.getId().equals(id));
         return ResponseEntity.noContent().build();
     }
 
-    private static Producer getProducerEntity(Long id) {
-        return Producer.getProducers().stream()
+    private Producer getProducerEntity(Long id) {
+        return repository.getProducers().stream()
                 .filter(a -> a.getId().equals(id))
                 .findFirst()
                 .orElseThrow();
