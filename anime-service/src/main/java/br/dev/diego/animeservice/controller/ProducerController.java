@@ -1,11 +1,11 @@
 package br.dev.diego.animeservice.controller;
 
-import br.dev.diego.animeservice.domain.Producer;
 import br.dev.diego.animeservice.domain.request.ProducerRequest;
 import br.dev.diego.animeservice.domain.request.ProducerResponse;
 import br.dev.diego.animeservice.service.ProducerService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,19 +28,13 @@ public class ProducerController {
     }
 
     @GetMapping
-    public List<Producer> obterProducers(@RequestParam(required = false) String nome) {
-        if (nome == null) return Producer.getProducers();
-        return Producer.getProducers().stream()
-                .filter(producer -> producer.getName().equalsIgnoreCase(nome))
-                .toList();
+    public ResponseEntity<List<ProducerResponse>> obterProducers(@RequestParam(required = false) String nome) {
+       return ResponseEntity.ok(producerService.buscarProducers(nome));
     }
 
     @GetMapping("{id}")
-    public Producer obterProducerPorId(@PathVariable Long id) {
-        return Producer.getProducers().stream()
-                .filter(producer -> producer.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
+    public ResponseEntity<ProducerResponse> obterProducerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(producerService.buscarProducerPorId(id));
     }
 
     @PostMapping
@@ -52,6 +46,11 @@ public class ProducerController {
         httpResponseHeaders.add("Authorization", "My Key Example");
 
         return ResponseEntity.created(location).headers(httpResponseHeaders).body(response);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deletarProducer(@PathVariable Long id) {
+        return producerService.deletar(id);
     }
 
 }

@@ -5,6 +5,7 @@ import br.dev.diego.animeservice.domain.request.AnimeResponse;
 import br.dev.diego.animeservice.service.AnimeService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,11 @@ public class AnimeController {
         httpResponseHeaders.add("Authorization", "My Key Example");
 
         return ResponseEntity.created(location).headers(httpResponseHeaders).body(response);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deletarAnime(@PathVariable Long id) {
+        return animeService.deletar(id);
     }
 
 }

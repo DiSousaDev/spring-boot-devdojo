@@ -31,11 +31,21 @@ public class AnimeService {
     }
 
     public ResponseEntity<AnimeResponse> buscarAnimePorId(Long id) {
-        Anime anime = Anime.getAnimes().stream()
+        Anime anime = getAnimeEntity(id);
+        return ResponseEntity.ok(MAPPER.toResponse(anime));
+    }
+
+    public ResponseEntity<Void> deletar(Long id) {
+        getAnimeEntity(id);
+        Anime.getAnimes().removeIf(a -> a.getId().equals(id));
+        return ResponseEntity.noContent().build();
+    }
+
+    private static Anime getAnimeEntity(Long id) {
+        return Anime.getAnimes().stream()
                 .filter(a -> a.getId().equals(id))
                 .findFirst()
                 .orElseThrow();
-        return ResponseEntity.ok(MAPPER.toResponse(anime));
     }
 
 }
