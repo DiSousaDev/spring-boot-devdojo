@@ -31,12 +31,12 @@ public class ProducerController {
 
     @GetMapping
     public ResponseEntity<List<ProducerResponse>> obterProducers(@RequestParam(required = false) String nome) {
-        return ResponseEntity.ok(producerService.buscarProducers(nome));
+        return ResponseEntity.ok(producerService.buscar(nome));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<ProducerResponse> obterProducerPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(producerService.buscarProducerPorId(id));
+        return ResponseEntity.ok(producerService.buscarPorId(id));
     }
 
     @PostMapping
@@ -58,7 +58,8 @@ public class ProducerController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletarProducer(@PathVariable Long id) {
-        return producerService.deletar(id);
+        producerService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -21,44 +21,32 @@ public class AnimeService {
         this.repository = repository;
     }
 
-    public List<AnimeResponse> buscarAnimes(String nome) {
-        List<Anime> animes = repository.getAnimes();
+    public List<AnimeResponse> buscar(String nome) {
+        List<Anime> animes = repository.findAll();
         if (nome != null) {
-            animes = repository.getAnimes().stream()
-                    .filter(anime -> anime.getName().contains(nome))
-                    .toList();
+            animes = repository.findByName(nome);
         }
         return MAPPER.toResponseList(animes);
     }
 
     public AnimeResponse save(AnimeRequest request) {
         Anime entity = MAPPER.toEntity(request);
-        repository.getAnimes().add(entity);
-        return MAPPER.toResponse(entity);
+        return MAPPER.toResponse(repository.save(entity));
     }
 
-    public AnimeResponse buscarAnimePorId(Long id) {
-        Anime anime = getAnimeEntity(id);
+    public AnimeResponse buscarPorId(Long id) {
+        Anime anime = repository.findById(id);
         return MAPPER.toResponse(anime);
     }
 
     public AnimeResponse atualizar(Long id, AnimeUpdateRequest request) {
-        Anime anime = getAnimeEntity(id);
+        Anime anime = repository.findById(id);
         MAPPER.updateAnimeFromRequest(request, anime);
         return MAPPER.toResponse(anime);
     }
 
-
     public void deletar(Long id) {
-        getAnimeEntity(id);
-        repository.getAnimes().removeIf(a -> a.getId().equals(id));
-    }
-
-    private Anime getAnimeEntity(Long id) {
-        return repository.getAnimes().stream()
-                .filter(a -> a.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
+        repository.deleteById(id);
     }
 
 }

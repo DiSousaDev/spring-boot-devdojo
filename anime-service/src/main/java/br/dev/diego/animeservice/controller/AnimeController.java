@@ -31,12 +31,12 @@ public class AnimeController {
 
     @GetMapping
     public ResponseEntity<List<AnimeResponse>> obterAnimes(@RequestParam(required = false) String nome) {
-       return ResponseEntity.ok(animeService.buscarAnimes(nome));
+       return ResponseEntity.ok(animeService.buscar(nome));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<AnimeResponse> obterAnimePorId(@PathVariable Long id) {
-        return ResponseEntity.ok(animeService.buscarAnimePorId(id));
+        return ResponseEntity.ok(animeService.buscarPorId(id));
     }
 
     @PostMapping
