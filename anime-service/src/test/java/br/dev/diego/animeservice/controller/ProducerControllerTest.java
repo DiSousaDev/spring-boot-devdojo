@@ -14,8 +14,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -25,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = ProducerController.class)
@@ -40,6 +43,9 @@ class ProducerControllerTest {
 
     @MockBean
     private ProducerData producerData;
+
+    @SpyBean //Permite mocar apenas uma chamada específica ao método.
+    private ProducerRepository repository;
 
     private final List<Producer> producerList = new ArrayList<>();
 
@@ -117,6 +123,82 @@ class ProducerControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
+    @Test
+    @DisplayName("POST /producers Deve salvar um producer")
+    @Order(6)
+    void deve_salvar_um_producer() throws Exception {
+        String request = loadJson("producer/post-request-producer-200.json");
+        String response = loadJson("producer/post-response-producer-201.json");
+        Producer producerToSave = new Producer(67L, "New Producer", LocalDateTime.parse("2025-01-10T17:48:37.550866"));
+        when(repository.save(any())).thenReturn(producerToSave);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/v1/producers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
+    @DisplayName("PUT /producers Deve atualizar um producer")
+    @Order(7)
+    void atualizar_deve_atualizar_um_producer() throws Exception {
+        String request = loadJson("producer/put-request-producer-200.json");
+        String response = loadJson("producer/put-response-producer-200.json");
+        Producer producerToUpdate = new Producer(1L, "Producer updated", LocalDateTime.parse("2025-01-10T17:48:37.550866"));
+        when(producerData.getProducers()).thenReturn(producerList);
+        when(repository.save(any())).thenReturn(producerToUpdate);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/v1/producers/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
+    @DisplayName("PUT v1/producers/99 Deve retornar um ResponseStatusException 404 quando ID nao encontrado")
+    @Order(8)
+    void atualizar_deve_retornar_um_erro_404_ResponseStatusException() throws Exception {
+        String request = loadJson("producer/put-request-producer-200.json");
+        when(producerData.getProducers()).thenReturn(producerList);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/v1/producers/{id}", 99)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("DELETE v1/producers/1 Deve deletar um producer por ID")
+    @Order(9)
+    void deletar_deve_deletar_um_producer() throws Exception {
+        when(producerData.getProducers()).thenReturn(producerList);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/producers/{id}", 1))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("DELETE v1/producers/1 Deve lancar uma excecao quando nao encontra o producer")
+    @Order(10)
+    void deletar_deve_lancar_ResponseStatusException() throws Exception {
+        when(producerData.getProducers()).thenReturn(producerList);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/producers/{id}", 99))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 
     private String loadJson(String fileName) {
         try {
