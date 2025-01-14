@@ -40,7 +40,7 @@ class AnimeServiceTest {
     @Mock
     private AnimeRepository repository;
 
-    private List<Anime> animeList = new ArrayList<>();
+    private final List<Anime> animeList = new ArrayList<>();
 
     private Anime anime1;
 

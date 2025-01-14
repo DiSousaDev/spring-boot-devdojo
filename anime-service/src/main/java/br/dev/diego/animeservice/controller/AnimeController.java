@@ -35,7 +35,7 @@ public class AnimeController {
 
     @GetMapping
     public ResponseEntity<List<AnimeResponse>> obterAnimes(@RequestParam(required = false) String nome) {
-       return ResponseEntity.ok(mapper.toResponseList(animeService.buscar(nome)));
+        return ResponseEntity.ok(mapper.toResponseList(animeService.buscar(nome)));
     }
 
     @GetMapping("{id}")

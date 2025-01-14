@@ -49,7 +49,7 @@ class ProducerControllerTest {
 
     @Autowired
     private ResourceLoader resourceLoader;
-    
+
     @Autowired
     private JsonUtils jsonUtils;
 
@@ -206,5 +206,5 @@ class ProducerControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
-    
+
 }

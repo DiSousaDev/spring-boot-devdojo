@@ -41,7 +41,7 @@ class ProducerServiceTest {
     @Mock
     private ProducerRepository repository;
 
-    private List<Producer> producerList = new ArrayList<>();
+    private final List<Producer> producerList = new ArrayList<>();
 
     private Producer producer1;
 

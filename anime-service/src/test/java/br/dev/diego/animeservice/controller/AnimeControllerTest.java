@@ -60,8 +60,8 @@ class AnimeControllerTest {
 
     @BeforeEach
     void setUp() {
-       anime1 = AnimeUtils.createAnime();
-       animeList.addAll(AnimeUtils.createAnimeList());
+        anime1 = AnimeUtils.createAnime();
+        animeList.addAll(AnimeUtils.createAnimeList());
     }
 
     @Test

@@ -1,6 +1,5 @@
 package br.dev.diego.animeservice.commons;
 
-import br.dev.diego.animeservice.domain.Anime;
 import br.dev.diego.animeservice.domain.Producer;
 
 import java.time.LocalDateTime;
