@@ -3,6 +3,7 @@ package br.dev.diego.userservice.service;
 import br.dev.diego.userservice.commons.UserUtils;
 import br.dev.diego.userservice.domain.User;
 import br.dev.diego.userservice.respository.UserHardCodedRepository;
+import br.dev.diego.userservice.service.exception.NotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,6 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -87,15 +87,15 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("findById throws ResponseStatusException when user is not found")
+    @DisplayName("findById throws NotFoundException when user is not found")
     @Order(5)
-    void findById_ThrowsResponseStatusException_WhenUserIsNotFound() {
+    void findById_ThrowsNotFoundException_WhenUserIsNotFound() {
         var expectedUser = userList.getFirst();
         BDDMockito.when(repository.findById(expectedUser.getId())).thenReturn(Optional.empty());
 
         Assertions.assertThatException()
                 .isThrownBy(() -> service.findByIdOrThrowNotFound(expectedUser.getId()))
-                .isInstanceOf(ResponseStatusException.class);
+                .isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -123,15 +123,15 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("delete throws ResponseStatusException when user is not found")
+    @DisplayName("delete throws NotFoundException when user is not found")
     @Order(8)
-    void delete_ThrowsResponseStatusException_WhenUserIsNotFound() {
+    void delete_ThrowsNotFoundException_WhenUserIsNotFound() {
         var userToDelete = userList.getFirst();
         BDDMockito.when(repository.findById(userToDelete.getId())).thenReturn(Optional.empty());
 
         Assertions.assertThatException()
                 .isThrownBy(() -> service.delete(userToDelete.getId()))
-                .isInstanceOf(ResponseStatusException.class);
+                .isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -148,15 +148,15 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("update throws ResponseStatusException when user is not found")
+    @DisplayName("update throws NotFoundException when user is not found")
     @Order(10)
-    void update_ThrowsResponseStatusException_WhenUserIsNotFound() {
+    void update_ThrowsNotFoundException_WhenUserIsNotFound() {
         var userToUpdate = userList.getFirst();
 
         BDDMockito.when(repository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
 
         Assertions.assertThatException()
                 .isThrownBy(() -> service.update(userToUpdate))
-                .isInstanceOf(ResponseStatusException.class);
+                .isInstanceOf(NotFoundException.class);
     }
 }

@@ -2,9 +2,8 @@ package br.dev.diego.userservice.service;
 
 import br.dev.diego.userservice.domain.User;
 import br.dev.diego.userservice.respository.UserHardCodedRepository;
-import org.springframework.http.HttpStatus;
+import br.dev.diego.userservice.service.exception.NotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class UserService {
 
     public User findByIdOrThrowNotFound(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not Found"));
+                .orElseThrow(() -> new NotFoundException("User not Found"));
     }
 
     public User save(User user) {
@@ -36,7 +35,7 @@ public class UserService {
     }
 
     public void update(User userToUpdate) {
-        var user = findByIdOrThrowNotFound(userToUpdate.getId());
+        findByIdOrThrowNotFound(userToUpdate.getId());
         repository.update(userToUpdate);
     }
 }
